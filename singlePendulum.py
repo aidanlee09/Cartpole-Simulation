@@ -8,9 +8,7 @@ from collections import deque
 import matplotlib.patches as p
 
 G = 9.8  # acceleration due to gravity, in m/s^2
-L1 = 1.0  # length of pendulum 1 in m
-L2 = 1.0  # length of pendulum 2 in m
-L = L1 + L2  # maximal length of the combined pendulum
+L = 1.0
 mc = 5.0  # mass of cart
 mp = 1.0  # mass of pendulum
 t_stop = 20  # how many seconds to simulate
