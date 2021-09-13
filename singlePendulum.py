@@ -8,12 +8,14 @@ from collections import deque
 import matplotlib.patches as p
 
 G = 9.8  # acceleration due to gravity, in m/s^2
-L = 1.0
+L1 = 1.0 
+L2 = 1.0  
+L = L1 + L2 
 mc = 5.0  # mass of cart
 mp = 1.0  # mass of pendulum
-t_stop = 20  # how many seconds to simulate
-history_len = 500  # how many trajectory points to display
-
+t_stop = 20
+history_len = 500
+    
 def derivs(state, t):
     
     x, v, theta, omega = state
@@ -27,7 +29,7 @@ def derivs(state, t):
     return dstatedt
 
 
-# create a time array from 0..t_stop sampled at 0.1 second steps
+
 dt = 0.02
 t = np.arange(0, t_stop, dt)
 x = 0
@@ -35,11 +37,11 @@ v = 0
 theta = 3*np.pi/4
 omega = 0
 
+
 state = np.array([x, v, theta, omega])
 
 y = integrate.odeint(derivs, state, t)
 print(y.shape)
-
 
 #visuals
 fig = plt.figure(figsize=(12, 8)) #window size
@@ -47,7 +49,8 @@ ax = fig.add_subplot(autoscale_on=False, xlim=(-2*L1, 2*L1), ylim=(-2*L1, 2*1.))
 ax.set_aspect('equal')
 ax.grid()
 
-
+cartpos_list = y[:,0]
+theta_list = y[:,2]
 line, = ax.plot([], [], 'o-', lw=2)
 trace, = ax.plot([], [], ',-', lw=1)
 rectangle = p.Rectangle((0, 0), 0, 0, color = "orange", lw = 2)
@@ -56,9 +59,6 @@ time_template = 'time = %.1fs'
 time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
 history_x, history_y = deque(maxlen=history_len), deque(maxlen=history_len)
 
-cartpos_list = y[:,0]
-theta_list = y[:,2]
-    
 def animate(i):
     
     thisx = [cartpos_list[i], L*cos(theta_list[i]-np.pi/2)+cartpos_list[i]]
