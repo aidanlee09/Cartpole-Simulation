@@ -7,21 +7,21 @@ import matplotlib.animation as animation
 from collections import deque
 import matplotlib.patches as p
 
-G = 9.8  # acceleration due to gravity, in m/s^2
-L1 = 1.0 
-L2 = 1.0  
-L = L1 + L2 
+G = 9.8
+L1 = 1.0
+L2 = 1.0
+L = L1 + L2
 mc = 5.0  # mass of cart
 mp = 1.0  # mass of pendulum
 t_stop = 20
 history_len = 500
-    
+
 def derivs(state, t):
     
     x, v, theta, omega = state
     dstatedt = np.zeros(4)
     dstatedt[0] = v
-    F = 1000*(np.pi - theta) - 100*omega - 10*x
+    F = 1000*(np.pi - theta) - 10*omega - 10*x
     dstatedt[1] = (F + mp*np.sin(theta)*(L*omega**2 + G*np.cos(theta)))/(mc+mp*(np.sin(theta))**2)
     dstatedt[2] = omega
     dstatedt[3] = (-1*F*np.cos(theta) - mp*L*(omega**2)*np.cos(theta)*np.sin(theta) - (mc + mp)*G*np.sin(theta))/(L*(mc + mp*(np.sin(theta))**2))
@@ -34,12 +34,11 @@ dt = 0.02
 t = np.arange(0, t_stop, dt)
 x = 0
 v = 0
-theta = 3*np.pi/4
+theta = np.pi+0.1
 omega = 0
 
 
 state = np.array([x, v, theta, omega])
-
 y = integrate.odeint(derivs, state, t)
 print(y.shape)
 
@@ -51,6 +50,8 @@ ax.grid()
 
 cartpos_list = y[:,0]
 theta_list = y[:,2]
+
+
 line, = ax.plot([], [], 'o-', lw=2)
 trace, = ax.plot([], [], ',-', lw=1)
 rectangle = p.Rectangle((0, 0), 0, 0, color = "orange", lw = 2)
