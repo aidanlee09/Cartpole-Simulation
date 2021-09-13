@@ -16,34 +16,6 @@ mp = 1.0  # mass of pendulum
 t_stop = 20  # how many seconds to simulate
 history_len = 500  # how many trajectory points to display
 
-
-# =============================================================================
-# def derivs(state, t):
-# 
-#     dydx = np.zeros_like(state)
-#     dydx[0] = state[1]
-# 
-#     delta = state[2] - state[0]
-#     den1 = (M1+M2) * L1 - M2 * L1 * cos(delta) * cos(delta)
-#     dydx[1] = ((M2 * L1 * state[1] * state[1] * sin(delta) * cos(delta)
-#                 + M2 * G * sin(state[2]) * cos(delta)
-#                 + M2 * L2 * state[3] * state[3] * sin(delta)
-#                 - (M1+M2) * G * sin(state[0]))
-#                / den1)
-# 
-#     dydx[2] = state[3]
-# 
-#     den2 = (L2/L1) * den1
-#     dydx[3] = ((- M2 * L2 * state[3] * state[3] * sin(delta) * cos(delta)
-#                 + (M1+M2) * G * sin(state[0]) * cos(delta)
-#                 - (M1+M2) * L1 * state[1] * state[1] * sin(delta)
-#                 - (M1+M2) * G * sin(state[2]))
-#                / den2)
-# 
-#     return dydx
-# =============================================================================
-    
-
 def derivs(state, t):
     
     x, v, theta, omega = state
@@ -60,30 +32,15 @@ def derivs(state, t):
 # create a time array from 0..t_stop sampled at 0.1 second steps
 dt = 0.02
 t = np.arange(0, t_stop, dt)
-
-# =============================================================================
-# # th1 and th2 are the initial angles (degrees)
-# # w10 and w20 are the initial angular velocities (degrees per second)
-# theta = np.pi-0.1
-# omega = 0.0
-# th2 = 0.0
-# w2 = 0.0
-# =============================================================================
 x = 0
 v = 0
 theta = 3*np.pi/4
 omega = 0
 
-#initial state
 state = np.array([x, v, theta, omega])
 
-# integrate your ODE using scipy.integrate.
 y = integrate.odeint(derivs, state, t)
 print(y.shape)
-
-
-#x1 = L1*sin(y[:, 0])
-#y1 = -L1*cos(y[:, 0])
 
 
 #visuals
@@ -93,15 +50,6 @@ ax.set_aspect('equal')
 ax.grid()
 
 
-#cartpos_list = []
-# =============================================================================
-# for x in range(1000):
-#     
-#     cartpos_list.append(x*0.001)
-#     s = cartpos_list[x]
-# 
-# =============================================================================
-cartpos_list = y[:,0]
 line, = ax.plot([], [], 'o-', lw=2)
 trace, = ax.plot([], [], ',-', lw=1)
 rectangle = p.Rectangle((0, 0), 0, 0, color = "orange", lw = 2)
@@ -110,19 +58,9 @@ time_template = 'time = %.1fs'
 time_text = ax.text(0.05, 0.9, '', transform=ax.transAxes)
 history_x, history_y = deque(maxlen=history_len), deque(maxlen=history_len)
 
-
+cartpos_list = y[:,0]
 theta_list = y[:,2]
-
-# =============================================================================
-# for x in range(10000):
-#     thetadot = omega
-#     omegadot = -np.sin(theta) - 3*omega - 3*(theta - np.pi)
-#     theta = theta + thetadot*dt
-#     omega = omega + omegadot*dt
-#     theta_list.append(theta-np.pi/2)
-# =============================================================================
     
-
 def animate(i):
     
     thisx = [cartpos_list[i], L*cos(theta_list[i]-np.pi/2)+cartpos_list[i]]
